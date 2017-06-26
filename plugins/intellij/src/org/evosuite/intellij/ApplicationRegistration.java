@@ -19,10 +19,10 @@
  */
 package org.evosuite.intellij;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ApplicationComponent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  *  Entry point for the IntelliJ plugin for when IntelliJ starts
@@ -32,23 +32,28 @@ import org.jetbrains.annotations.NotNull;
 public class ApplicationRegistration implements ApplicationComponent {
     @Override
     public void initComponent() {
-        EvoAction evo = new EvoAction();
-
-
         // Gets an instance of the WindowMenu action group.
         //DefaultActionGroup windowM = (DefaultActionGroup) am.getAction("WindowMenu");
         //this in the file editor, not the left-pane file selection
         //DefaultActionGroup editorM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
 
         ActionManager am = ActionManager.getInstance();
+        EvoAction evoOptionsAction = new EvoAction();
+        am.registerAction("Evo Options", evoOptionsAction);
 
+        DefaultActionGroup evoGroup = new DefaultActionGroup("EvoSuite", true);
+        evoGroup.add(evoOptionsAction);
+
+
+
+        //get the menu's and add a separator
         DefaultActionGroup pvM = (DefaultActionGroup) am.getAction("ProjectViewPopupMenu");
-        pvM.addSeparator();
-        pvM.add(evo);
-
         DefaultActionGroup epM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
+        pvM.addSeparator();
         epM.addSeparator();
-        epM.add(evo);
+
+        pvM.add(evoGroup);
+        epM.add(evoGroup);
     }
 
     @Override
