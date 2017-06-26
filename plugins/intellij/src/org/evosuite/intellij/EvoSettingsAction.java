@@ -22,17 +22,13 @@ package org.evosuite.intellij;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.actionSystem.PlatformDataKeys;
-import com.intellij.openapi.module.Module;
-import com.intellij.openapi.module.ModuleManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.roots.ModuleRootManager;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import org.evosuite.intellij.util.AsyncGUINotifier;
 import org.evosuite.intellij.util.EvoSuiteExecutor;
-import org.evosuite.intellij.util.Utils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -44,17 +40,17 @@ import java.util.*;
 /**
  * Created by arcuri on 9/24/14.
  */
-public class EvoAction extends AnAction {
+public class EvoSettingsAction extends AnAction {
 
-    public EvoAction() {
-        super("Run EvoSuite",
+    public EvoSettingsAction() {
+        super("EvoSuite Settings",
                 "Open GUI dialog to configure and start running EvoSuite to generate JUnit tests automatically",
                 loadIcon());
     }
 
     private static Icon loadIcon(){
         try {
-            Image image = ImageIO.read( EvoAction.class.getClassLoader().getResourceAsStream( "evosuite.png" ));
+            Image image = ImageIO.read( EvoSettingsAction.class.getClassLoader().getResourceAsStream( "evosuite.png" ));
             image = image.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH);
             ImageIcon icon =  new ImageIcon(image);
 

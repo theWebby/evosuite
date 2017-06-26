@@ -22,7 +22,6 @@ package org.evosuite.intellij;
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ApplicationComponent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  *  Entry point for the IntelliJ plugin for when IntelliJ starts
@@ -38,11 +37,11 @@ public class ApplicationRegistration implements ApplicationComponent {
         //DefaultActionGroup editorM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
 
         ActionManager am = ActionManager.getInstance();
-        EvoAction evoOptionsAction = new EvoAction();
-        am.registerAction("Evo Options", evoOptionsAction);
+        EvoSettingsAction evoSettingsAction = new EvoSettingsAction();
+        am.registerAction("Evo Options", evoSettingsAction);
 
         DefaultActionGroup evoGroup = new DefaultActionGroup("EvoSuite", true);
-        evoGroup.add(evoOptionsAction);
+        evoGroup.add(evoSettingsAction);
 
 
 
