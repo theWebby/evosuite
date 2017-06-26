@@ -21,6 +21,7 @@ package org.evosuite.intellij;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ApplicationComponent;
+import org.evosuite.intellij.util.EvoRunAction;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -36,21 +37,24 @@ public class ApplicationRegistration implements ApplicationComponent {
         //this in the file editor, not the left-pane file selection
         //DefaultActionGroup editorM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
 
+        //registering actions with actionmanager and adding them to EvoSuite group
         ActionManager am = ActionManager.getInstance();
+
         EvoSettingsAction evoSettingsAction = new EvoSettingsAction();
-        am.registerAction("Evo Options", evoSettingsAction);
+        EvoRunAction evoRunAction = new EvoRunAction();
+        am.registerAction("EvoSuite Settings", evoSettingsAction);
+        am.registerAction("Run EvoSuite", evoRunAction);
 
         DefaultActionGroup evoGroup = new DefaultActionGroup("EvoSuite", true);
         evoGroup.add(evoSettingsAction);
+        evoGroup.add(evoRunAction);
 
 
-
-        //get the menu's and add a separator
+        //add EvoSuite group to editor and project popup menus
         DefaultActionGroup pvM = (DefaultActionGroup) am.getAction("ProjectViewPopupMenu");
         DefaultActionGroup epM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
         pvM.addSeparator();
         epM.addSeparator();
-
         pvM.add(evoGroup);
         epM.add(evoGroup);
     }
