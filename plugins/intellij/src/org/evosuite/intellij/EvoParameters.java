@@ -58,6 +58,9 @@ public class EvoParameters {
     private int guiWidth;
     private int guiHeight;
 
+    private final int MIN_GUI_WIDTH = 500;
+    private final int MIN_GUI_HEIGHT = 340;
+
 
     public static EvoParameters getInstance(){
         return singleton;
@@ -83,8 +86,10 @@ public class EvoParameters {
         evosuiteJarLocation = p.getValue(EVOSUITE_JAR_LOCATION,"");
         executionMode = p.getValue(EXECUTION_MODE,EXECUTION_MODE_MVN);
 
-        guiWidth = p.getInt(GUI_DIALOG_WIDTH, 570);
-        guiHeight = p.getInt(GUI_DIALOG_HEIGHT, 300);
+        guiWidth = p.getInt(GUI_DIALOG_WIDTH, MIN_GUI_WIDTH);       //default is minimum
+        guiHeight = p.getInt(GUI_DIALOG_HEIGHT, MIN_GUI_HEIGHT);    //default is minimum
+
+        setGUIMinimums();
     }
 
     public void save(Project project){
@@ -139,6 +144,16 @@ public class EvoParameters {
                 }
             }
             return "";
+        }
+    }
+
+    private void setGUIMinimums(){
+        if (guiWidth < MIN_GUI_WIDTH) {
+            guiWidth = MIN_GUI_WIDTH;
+        }
+
+        if (guiHeight < MIN_GUI_HEIGHT) {
+            guiHeight = MIN_GUI_HEIGHT;
         }
     }
 
