@@ -54,20 +54,6 @@ public class EvoSettingsAction extends AnEvoAction {
         String title = "EvoSuite Plugin";
         Project project = event.getData(PlatformDataKeys.PROJECT);
 
-        ToolWindowManager toolWindowManager = ToolWindowManager.getInstance(project);
-        ToolWindow toolWindow = toolWindowManager.getToolWindow("EvoSuite");
-
-//        final AsyncGUINotifier notifier = IntelliJNotifier.getNotifier(project);
-
-
-
-//        Map<String,Set<String>> map = getCUTsToTest(event);
-//        if(map==null || map.isEmpty() || map.values().stream().mapToInt(Set::size).sum() == 0){
-//            Messages.showMessageDialog(project, "No '.java' file or non-empty source folder was selected in a valid module",
-//                    title, Messages.getErrorIcon());
-//            return;
-//        }
-
         EvoStartDialog dialog = new EvoStartDialog();
         dialog.initFields(project, EvoParameters.getInstance());
         dialog.setModal(true);
@@ -77,9 +63,7 @@ public class EvoSettingsAction extends AnEvoAction {
         dialog.setVisible(true);
 
         if (dialog.isWasOK()) {
-
             EvoParameters.getInstance().save(project);
-            //EvoSuiteExecutor.getInstance().run(project,EvoParameters.getInstance(),map,notifier);
         }
     }
 }
