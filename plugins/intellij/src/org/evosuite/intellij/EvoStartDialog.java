@@ -23,6 +23,8 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.ui.components.JBPanel;
+import com.intellij.ui.components.JBTabbedPane;
 import org.evosuite.intellij.util.EvoVersion;
 import org.evosuite.intellij.util.Utils;
 
@@ -52,6 +54,9 @@ public class EvoStartDialog extends JDialog {
     private JButton evosuiteSelectionButton;
     private JRadioButton mavenRadioButton;
     private JRadioButton evosuiteRadioButton;
+    private JPanel defaultSettingsTab;
+    private JTabbedPane tabbedPane1;
+    private JPanel okPanel;
 
     private volatile boolean wasOK = false;
     private volatile EvoParameters params;
@@ -83,6 +88,7 @@ public class EvoStartDialog extends JDialog {
             evosuiteRadioButton.setSelected(true);
         }
         checkExecution();
+
     }
 
 
