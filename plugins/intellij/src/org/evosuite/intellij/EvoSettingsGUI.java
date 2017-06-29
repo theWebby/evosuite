@@ -17,6 +17,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.evosuite.intellij.stage.*;
 
+import javax.swing.*;
+
 /**
  * Created by webby on 28/06/17.
  */
@@ -129,7 +131,9 @@ public class EvoSettingsGUI extends Application{
         return wasOK;
     }
 
+
     //      Event handler methods
+
     public void onButtonOK(){
         wasOK = true;
         onClose();
@@ -140,10 +144,26 @@ public class EvoSettingsGUI extends Application{
         onClose();
     }
 
+    //update this to only ask if they are sure if they have made changes to the settings. If no changes have been made
+    //then you need not ask the message.
     public void onClose(){
-        saveParams();
+        if (wasOK){
+            saveParams();
+        }
+        else{
+            //if the user does not click 'OK' to close then this will be shown
+            int answer = JOptionPane.showConfirmDialog(null, "About to close without saving, are you sure?", "Warning", 0);
+            if (answer == JOptionPane.NO_OPTION){
+                wasOK = true;
+                saveParams();
+            }
+
+        }
         evoWindow.hide();
     }
+
+
+    // custom
 
     private void saveParams(){
         params.setGuiWasOK(wasOK);
