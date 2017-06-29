@@ -108,7 +108,7 @@ public class EvoSettingsGUI extends Application{
 
         evoWindow = primaryStage;
         evoWindow.setTitle("EvoSuite Settings");
-        evoWindow.initModality(Modality.APPLICATION_MODAL);
+        //evoWindow.initModality(Modality.APPLICATION_MODAL);
 
 
 
@@ -121,6 +121,12 @@ public class EvoSettingsGUI extends Application{
     }
 
 
+    //accessor and mutator methods
+    public boolean isWasOK(){
+        return wasOK;
+    }
+
+    //      Event handler methods
     public void onButtonOK(){
         wasOK = true;
     }

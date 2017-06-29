@@ -38,6 +38,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import static javafx.application.Application.launch;
+
 /**
  * Created by arcuri on 9/24/14.
  */
@@ -74,7 +76,15 @@ public class EvoSettingsAction extends AnEvoAction {
         Project project = event.getData(PlatformDataKeys.PROJECT);
 
         EvoSettingsGUI settingsWindow = new EvoSettingsGUI();
+        launch(settingsWindow.getClass());
 
+        if (settingsWindow.isWasOK()) {
+            System.out.println("OK");
+        }
+        else
+        {
+            System.out.println("Nah dont save it bruv");
+        }
 
 
     }
