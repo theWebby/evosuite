@@ -55,19 +55,27 @@ public class EvoSettingsAction extends AnEvoAction {
      */
     public void actionPerformed(AnActionEvent event) {
 
+//        String title = "EvoSuite Plugin";
+//        Project project = event.getData(PlatformDataKeys.PROJECT);
+//
+//        EvoStartDialog dialog = new EvoStartDialog();
+//        dialog.initFields(project, EvoParameters.getInstance());
+//        dialog.setModal(true);
+//        dialog.setLocationRelativeTo(null);
+//        //dialog.setLocationByPlatform(true);
+//        dialog.pack();
+//        dialog.setVisible(true);
+//
+//        if (dialog.isWasOK()) {
+//            EvoParameters.getInstance().save(project);
+//        }
+
         String title = "EvoSuite Plugin";
         Project project = event.getData(PlatformDataKeys.PROJECT);
 
-        EvoStartDialog dialog = new EvoStartDialog();
-        dialog.initFields(project, EvoParameters.getInstance());
-        dialog.setModal(true);
-        dialog.setLocationRelativeTo(null);
-        //dialog.setLocationByPlatform(true);
-        dialog.pack();
-        dialog.setVisible(true);
+        EvoSettingsGUI settingsWindow = new EvoSettingsGUI();
 
-        if (dialog.isWasOK()) {
-            EvoParameters.getInstance().save(project);
-        }
+
+
     }
 }
