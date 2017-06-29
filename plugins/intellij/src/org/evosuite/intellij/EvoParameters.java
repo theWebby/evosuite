@@ -57,6 +57,7 @@ public class EvoParameters {
     private String executionMode;
     private int guiWidth;
     private int guiHeight;
+    private boolean guiWasOK;
 
     private final int MIN_GUI_WIDTH = 500;
     private final int MIN_GUI_HEIGHT = 340;
@@ -236,5 +237,13 @@ public class EvoParameters {
 
     public void setGuiHeight(int guiHeight) {
         this.guiHeight = guiHeight;
+    }
+
+    public boolean getGuiWasOK(){
+        return guiWasOK;
+    }
+
+    public void setGuiWasOK(boolean guiWasOK){
+        this.guiWasOK = guiWasOK;
     }
 }

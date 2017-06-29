@@ -21,8 +21,10 @@ import org.evosuite.intellij.stage.*;
  * Created by webby on 28/06/17.
  */
 public class EvoSettingsGUI extends Application{
-    DefaultSettingsPane defaultSettingsPane;
-    AdvancedSettingsPane advancedSettingsPane;
+    private EvoParameters params = EvoParameters.getInstance();
+
+    private DefaultSettingsPane defaultSettingsPane;
+    private AdvancedSettingsPane advancedSettingsPane;
 
     private Stage evoWindow;
     private Scene settingsScene;
@@ -42,7 +44,7 @@ public class EvoSettingsGUI extends Application{
     private volatile boolean wasOK;
 
     // Initialises components needed on the gui ie. text and action listeners
-    private void initComponents(Stage primaryStage){
+    private void initComponents(Stage stage){
         wasOK = false;
 
         //create the structure
@@ -68,11 +70,11 @@ public class EvoSettingsGUI extends Application{
         bottomPanel.setPadding(new Insets(15,10,10,10));
         bottomPanel.setSpacing(10);
 
-        setupTabs(primaryStage);
+        setupTabs(stage);
     }
 
 
-    private void setupTabs(Stage primaryStage){
+    private void setupTabs(Stage stage){
         //creating a new tab pane and adding instances of the default and advanced settings as tabs
         tabPane = new TabPane();
         defaultTab = new Tab("Default Settings");
@@ -88,11 +90,11 @@ public class EvoSettingsGUI extends Application{
         //tab settings
         defaultTab.setClosable(false);
         advancedTab.setClosable(false);
-        tabPane.prefWidthProperty().bind(primaryStage.widthProperty());
+        tabPane.prefWidthProperty().bind(stage.widthProperty());
         tabPane.setTabMinWidth(225);
     }
 
-    private void setupGrid(Stage primaryStage) {
+    private void setupGrid(Stage stage) {
         contentBox.getChildren().addAll(tabPane, separator, bottomPanel);
     }
 
@@ -102,22 +104,23 @@ public class EvoSettingsGUI extends Application{
 
 
     public void start(Stage primaryStage) throws Exception {
-        initComponents(primaryStage);
-        setupGrid(primaryStage);
-        primaryStage.setResizable(false);
-
-        evoWindow = primaryStage;
+        // creating the stage (window) with some default settings
+        evoWindow = new Stage();
+        evoWindow.setResizable(false);
         evoWindow.setTitle("EvoSuite Settings");
-        //evoWindow.initModality(Modality.APPLICATION_MODAL);
+        evoWindow.initModality(Modality.APPLICATION_MODAL);
+        evoWindow.setOnCloseRequest(e -> onClose());
 
+        //inits everything and adds to contentBox
+        initComponents(evoWindow);
+        setupGrid(evoWindow);
 
-
-
-
+        //creating the scene and adding it to the stage
         settingsScene = new Scene(contentBox, 530, 360);
         evoWindow.setScene(settingsScene);
 
-        evoWindow.show();
+        // show the settings stage and pause.
+        evoWindow.showAndWait();
     }
 
 
@@ -129,9 +132,20 @@ public class EvoSettingsGUI extends Application{
     //      Event handler methods
     public void onButtonOK(){
         wasOK = true;
+        onClose();
     }
 
     public void onButtonCancel(){
         wasOK = false;
+        onClose();
+    }
+
+    public void onClose(){
+        saveParams();
+        evoWindow.hide();
+    }
+
+    private void saveParams(){
+        params.setGuiWasOK(wasOK);
     }
 }
