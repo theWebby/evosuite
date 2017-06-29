@@ -2,11 +2,11 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.evosuite.intellij.EvoStartDialog">
   <grid id="cbd77" binding="contentPane" layout-manager="FormLayout">
     <rowspec value="center:max(d;4px):noGrow"/>
+    <rowspec value="center:52px:noGrow"/>
     <rowspec value="top:4dlu:noGrow"/>
-    <rowspec value="center:max(d;4px):noGrow"/>
     <colspec value="fill:391px:grow"/>
     <constraints>
-      <xy x="26" y="54" width="871" height="322"/>
+      <xy x="26" y="54" width="634" height="329"/>
     </constraints>
     <properties>
       <minimumSize width="540" height="300"/>
@@ -203,7 +203,7 @@
                   <toolTipText value="Location of the standalone jar file of EvoSuite"/>
                 </properties>
               </component>
-              <component id="a321f" class="javax.swing.JTextField" binding="evosuiteLocationTesxField">
+              <component id="a321f" class="javax.swing.JTextField" binding="evosuiteLocationTextField">
                 <constraints>
                   <grid row="10" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="-1"/>
@@ -244,27 +244,78 @@
               </component>
             </children>
           </grid>
-          <grid id="d98a7" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="d98a7" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Advanced"/>
             </constraints>
             <properties/>
             <border type="none"/>
-            <children/>
+            <children>
+              <component id="b97c6" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Enter custom parameters: "/>
+                </properties>
+              </component>
+              <component id="57bd4" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="[i.e. '-Dctg_time_per_class=3']"/>
+                </properties>
+              </component>
+              <component id="482c7" class="javax.swing.JList" binding="customParamList">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="119"/>
+                  </grid>
+                </constraints>
+                <properties/>
+              </component>
+              <hspacer id="f4f23">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="14" height="35"/>
+                  </grid>
+                </constraints>
+              </hspacer>
+              <component id="3940b" class="javax.swing.JTextField" binding="newParamTextField">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                    <preferred-size width="150" height="-1"/>
+                  </grid>
+                </constraints>
+                <properties>
+                  <text value=""/>
+                </properties>
+              </component>
+              <component id="3df30" class="javax.swing.JButton" binding="buttonAddCustomParam">
+                <constraints>
+                  <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <label value="Add"/>
+                  <text value="Add"/>
+                </properties>
+              </component>
+            </children>
           </grid>
         </children>
       </tabbedpane>
       <grid id="94766" binding="okPanel" layout-manager="FormLayout">
-        <rowspec value="center:35px:grow"/>
+        <rowspec value="center:33px:grow"/>
         <colspec value="fill:max(d;4px):noGrow"/>
         <colspec value="left:161dlu:grow"/>
         <colspec value="fill:100px:noGrow"/>
         <colspec value="left:13dlu:noGrow"/>
         <colspec value="fill:100px:noGrow"/>
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
-          <forms/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="2" fill="1" indent="0" use-parent-layout="false"/>
+          <forms defaultalign-vert="false"/>
         </constraints>
         <properties/>
         <border type="none"/>

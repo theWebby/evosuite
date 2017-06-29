@@ -44,11 +44,15 @@ import java.util.*;
 public class EvoSettingsAction extends AnEvoAction {
 
     public EvoSettingsAction() {
-        super("Settings", "Open GUI dialog to configure and start running EvoSuite to generate JUnit tests automatically");
+        super("Settings", "Open GUI dialog to configure EvoSuite.");
     }
 
-
-
+    /**
+     * Creates a new instance of the Settings window.
+     * If the user clicks ok, the settings are saved.
+     *
+     * @param event
+     */
     public void actionPerformed(AnActionEvent event) {
 
         String title = "EvoSuite Plugin";

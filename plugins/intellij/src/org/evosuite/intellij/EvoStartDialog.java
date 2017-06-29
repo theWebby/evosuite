@@ -23,8 +23,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.projectRoots.ProjectJdkTable;
 import com.intellij.openapi.projectRoots.Sdk;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.ui.components.JBPanel;
-import com.intellij.ui.components.JBTabbedPane;
+import com.intellij.ui.components.JBList;
 import org.evosuite.intellij.util.EvoVersion;
 import org.evosuite.intellij.util.Utils;
 
@@ -50,13 +49,16 @@ public class EvoStartDialog extends JDialog {
     private JTextField javaHomeField;
     private JButton selectMavenButton;
     private JButton selectJavaHomeButton;
-    private JTextField evosuiteLocationTesxField;
+    private JTextField evosuiteLocationTextField;
     private JButton evosuiteSelectionButton;
     private JRadioButton mavenRadioButton;
     private JRadioButton evosuiteRadioButton;
     private JPanel defaultSettingsTab;
     private JTabbedPane tabbedPane1;
     private JPanel okPanel;
+    private JList customParamList;
+    private JButton buttonAddCustomParam;
+    private JTextField newParamTextField;
 
     private volatile boolean wasOK = false;
     private volatile EvoParameters params;
@@ -72,7 +74,7 @@ public class EvoStartDialog extends JDialog {
 
         folderField.setText(params.getFolder());
         mavenField.setText(params.getMvnLocation());
-        evosuiteLocationTesxField.setText(params.getEvosuiteJarLocation());
+        evosuiteLocationTextField.setText(params.getEvosuiteJarLocation());
         javaHomeField.setText(params.getJavaHome());
 
         if (!Utils.isMavenProject(project)) {
@@ -107,6 +109,13 @@ public class EvoStartDialog extends JDialog {
         buttonCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
+            }
+        });
+
+        buttonAddCustomParam.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onAddCustomParam();
             }
         });
 
@@ -158,6 +167,10 @@ public class EvoStartDialog extends JDialog {
         setPreferredSize(new Dimension(EvoParameters.getInstance().getGuiWidth(), EvoParameters.getInstance().getGuiHeight()));
     }
 
+    private void onAddCustomParam(){
+
+    }
+
     private void onSelectEvosuite() {
         JFileChooser fc = new JFileChooser();
         fc.setAcceptAllFileFilterUsed(false);
@@ -180,7 +193,7 @@ public class EvoStartDialog extends JDialog {
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             String path = fc.getSelectedFile().getAbsolutePath();
             params.setEvosuiteJarLocation(path);
-            evosuiteLocationTesxField.setText(path);
+            evosuiteLocationTextField.setText(path);
         }
     }
 
@@ -191,7 +204,7 @@ public class EvoStartDialog extends JDialog {
             params.setExecutionMode(EvoParameters.EXECUTION_MODE_JAR);
         }
 
-        evosuiteLocationTesxField.setEnabled(evosuiteRadioButton.isSelected());
+        evosuiteLocationTextField.setEnabled(evosuiteRadioButton.isSelected());
         evosuiteSelectionButton.setEnabled(evosuiteRadioButton.isSelected());
         mavenField.setEnabled(mavenRadioButton.isSelected());
         selectMavenButton.setEnabled(mavenRadioButton.isSelected());
@@ -359,7 +372,7 @@ public class EvoStartDialog extends JDialog {
         String dir = folderField.getText();
         String mvn = mavenField.getText();
         String javaHome = javaHomeField.getText();
-        String evosuiteJar = evosuiteLocationTesxField.getText();
+        String evosuiteJar = evosuiteLocationTextField.getText();
 
 
         List<String> errors = new ArrayList<>();
