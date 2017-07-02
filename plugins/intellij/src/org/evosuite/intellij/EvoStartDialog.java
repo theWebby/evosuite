@@ -57,6 +57,9 @@ public class EvoStartDialog extends JDialog {
     private JPanel defaultSettingsTab;
     private JTabbedPane tabbedPane1;
     private JPanel okPanel;
+    private JButton addParamButton;
+    private JTextField paramTextField;
+    private JList advancedParamsList;
 
     private volatile boolean wasOK = false;
     private volatile EvoParameters params;
