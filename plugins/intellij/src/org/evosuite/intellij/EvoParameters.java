@@ -41,6 +41,8 @@ public class EvoParameters {
     public static final String EXECUTION_MODE = "execution_mode";
     public static final String GUI_DIALOG_WIDTH = "evosuite_gui_dialog_width";
     public static final String GUI_DIALOG_HEIGHT = "evosuite_gui_dialog_height";
+    public static final String NUMBER_OF_ADVANCED_PARAMS = "number_of_advanced_params";
+    public static final String ADVANCED_PARAM = "advanced_param_"; //number appended
 
     public static final String EXECUTION_MODE_MVN = "JAR";
     public static final String EXECUTION_MODE_JAR = "MVN";
@@ -55,6 +57,8 @@ public class EvoParameters {
     private String javaHome;
     private String evosuiteJarLocation;
     private String executionMode;
+    private List<String> advancedParams;
+    //private int numberOfAdvancedParams;
     private int guiWidth;
     private int guiHeight;
 
@@ -86,6 +90,11 @@ public class EvoParameters {
         evosuiteJarLocation = p.getValue(EVOSUITE_JAR_LOCATION,"");
         executionMode = p.getValue(EXECUTION_MODE,EXECUTION_MODE_MVN);
 
+        //loading advanced parameters
+        for (int i = 0; i < p.getInt(NUMBER_OF_ADVANCED_PARAMS, 0); i++){
+            advancedParams.add(p.getValue(ADVANCED_PARAM + i));
+        }
+
         guiWidth = p.getInt(GUI_DIALOG_WIDTH, MIN_GUI_WIDTH);       //default is minimum
         guiHeight = p.getInt(GUI_DIALOG_HEIGHT, MIN_GUI_HEIGHT);    //default is minimum
 
@@ -104,6 +113,12 @@ public class EvoParameters {
         p.setValue(EXECUTION_MODE,executionMode);
         p.setValue(GUI_DIALOG_WIDTH,""+guiWidth);
         p.setValue(GUI_DIALOG_HEIGHT,""+guiHeight);
+
+        //saving advanced parameters
+        p.setValue(NUMBER_OF_ADVANCED_PARAMS, ""+advancedParams.size());
+        for (int i = 0; i < advancedParams.size() - 1; i++){
+            p.setValue(ADVANCED_PARAM + i, advancedParams.get(i));
+        }
     }
 
     private String getPossibleLocationForMvn(){
@@ -237,4 +252,18 @@ public class EvoParameters {
     public void setGuiHeight(int guiHeight) {
         this.guiHeight = guiHeight;
     }
+
+    public void addAdvancedParameter(String param){
+        advancedParams.add(param);
+    }
+
+    public List<String> getAdvancedParams(){
+        return advancedParams;
+    }
+
+    public void setAdvancedParams(List<String> advancedParams){
+        this.advancedParams = advancedParams;
+    }
+
+
 }
