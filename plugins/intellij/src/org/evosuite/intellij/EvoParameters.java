@@ -23,6 +23,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import org.evosuite.intellij.util.Utils;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
@@ -57,7 +58,7 @@ public class EvoParameters {
     private String javaHome;
     private String evosuiteJarLocation;
     private String executionMode;
-    private List<String> advancedParams;
+    private DefaultListModel<String> advancedParams;
     //private int numberOfAdvancedParams;
     private int guiWidth;
     private int guiHeight;
@@ -92,7 +93,7 @@ public class EvoParameters {
 
         //loading advanced parameters
         for (int i = 0; i < p.getInt(NUMBER_OF_ADVANCED_PARAMS, 0); i++){
-            advancedParams.add(p.getValue(ADVANCED_PARAM + i));
+            advancedParams.addElement(p.getValue(ADVANCED_PARAM + i));
         }
 
         guiWidth = p.getInt(GUI_DIALOG_WIDTH, MIN_GUI_WIDTH);       //default is minimum
@@ -254,14 +255,14 @@ public class EvoParameters {
     }
 
     public void addAdvancedParameter(String param){
-        advancedParams.add(param);
+        advancedParams.addElement(param);
     }
 
-    public List<String> getAdvancedParams(){
+    public DefaultListModel<String> getAdvancedParams(){
         return advancedParams;
     }
 
-    public void setAdvancedParams(List<String> advancedParams){
+    public void setAdvancedParams(DefaultListModel<String> advancedParams){
         this.advancedParams = advancedParams;
     }
 
