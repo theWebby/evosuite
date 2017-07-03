@@ -244,7 +244,7 @@
               </component>
             </children>
           </grid>
-          <grid id="d98a7" layout-manager="GridLayoutManager" row-count="2" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="d98a7" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
               <tabbedpane title="Advanced"/>
@@ -252,7 +252,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="f7785" class="javax.swing.JButton" binding="addParamButton">
+              <component id="f7785" class="javax.swing.JButton" binding="buttonAddParam">
                 <constraints>
                   <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -268,13 +268,21 @@
                 </constraints>
                 <properties/>
               </component>
-              <component id="d3185" class="javax.swing.JList" binding="advancedParamsList">
+              <component id="d3185" class="javax.swing.JList" binding="advancedParamsList" custom-create="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                  <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="6" hsize-policy="2" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
                   </grid>
                 </constraints>
                 <properties/>
+              </component>
+              <component id="5615f" class="javax.swing.JButton" binding="buttonRemoveParam">
+                <constraints>
+                  <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Remove"/>
+                </properties>
               </component>
             </children>
           </grid>
@@ -315,6 +323,17 @@
               <text value="OK"/>
               <verticalAlignment value="0"/>
               <verticalTextPosition value="0"/>
+            </properties>
+          </component>
+          <component id="45cf8" class="javax.swing.JLabel" binding="warningLabel">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <forms/>
+            </constraints>
+            <properties>
+              <enabled value="true"/>
+              <foreground color="-65536"/>
+              <text value=""/>
             </properties>
           </component>
         </children>
