@@ -85,6 +85,8 @@ public class EvoStartDialog extends JDialog {
         evosuiteLocationTesxField.setText(params.getEvosuiteJarLocation());
         javaHomeField.setText(params.getJavaHome());
 
+        defaultListModel = params.getAdvancedParams();
+
         if (!Utils.isMavenProject(project)) {
             //disable Maven options
             selectMavenButton.setEnabled(false);
