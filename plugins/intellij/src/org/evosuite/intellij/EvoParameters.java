@@ -91,6 +91,8 @@ public class EvoParameters {
         evosuiteJarLocation = p.getValue(EVOSUITE_JAR_LOCATION,"");
         executionMode = p.getValue(EXECUTION_MODE,EXECUTION_MODE_MVN);
 
+        advancedParams = new DefaultListModel<String>();
+
         //loading advanced parameters
         for (int i = 0; i < p.getInt(NUMBER_OF_ADVANCED_PARAMS, 0); i++){
             advancedParams.addElement(p.getValue(ADVANCED_PARAM + i));
@@ -117,7 +119,7 @@ public class EvoParameters {
 
         //saving advanced parameters
         p.setValue(NUMBER_OF_ADVANCED_PARAMS, ""+advancedParams.size());
-        for (int i = 0; i < advancedParams.size() - 1; i++){
+        for (int i = 0; i < advancedParams.size(); i++){
             p.setValue(ADVANCED_PARAM + i, advancedParams.get(i));
         }
     }
@@ -259,12 +261,22 @@ public class EvoParameters {
     }
 
     public DefaultListModel<String> getAdvancedParams(){
-        return advancedParams;
+        if (advancedParams == null){
+            return new DefaultListModel<String>();
+        }
+        else{
+            return advancedParams;
+        }
+    }
+
+    public String getAdvancedParam(int index){
+        return this.advancedParams.get(index);
     }
 
     public void setAdvancedParams(DefaultListModel<String> advancedParams){
         this.advancedParams = advancedParams;
     }
+
 
 
 }

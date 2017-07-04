@@ -63,10 +63,10 @@ public class EvoStartDialog extends JDialog {
     private JPanel okPanel;
     private JButton buttonAddParam;
     private JTextField paramTextField;
-    private JList advancedParamsList;
+    private JList advancedParamsList; //UI ONLY - changes to be made to advancedParamsListModel
     private JButton buttonRemoveParam;
     private JLabel warningLabel;
-    private DefaultListModel<String> defaultListModel;
+    private DefaultListModel<String> advancedParamsListModel;
 
     private volatile boolean wasOK = false;
     private volatile EvoParameters params;
@@ -85,7 +85,7 @@ public class EvoStartDialog extends JDialog {
         evosuiteLocationTesxField.setText(params.getEvosuiteJarLocation());
         javaHomeField.setText(params.getJavaHome());
 
-        defaultListModel = params.getAdvancedParams();
+        //advancedParamsListModel = new DefaultListModel<String>();
 
         if (!Utils.isMavenProject(project)) {
             //disable Maven options
@@ -101,6 +101,7 @@ public class EvoStartDialog extends JDialog {
         }
         checkExecution();
 
+        addSavedAdvancedParams();
     }
 
 
@@ -369,7 +370,6 @@ public class EvoStartDialog extends JDialog {
     }
 
 
-
     private boolean saveParameters(boolean validate) {
 
         int cores = ((Number) coreField.getValue()).intValue();
@@ -420,6 +420,7 @@ public class EvoStartDialog extends JDialog {
         }
 
         params.setFolder(dir);
+        params.setAdvancedParams(advancedParamsListModel);
         params.setGuiWidth(this.getWidth());
         params.setGuiHeight(this.getHeight());
 
@@ -449,8 +450,8 @@ public class EvoStartDialog extends JDialog {
         coreField = new JFormattedTextField(nf);
         memoryField = new JFormattedTextField(nf);
         timeField = new JFormattedTextField(nf);
-        defaultListModel = new DefaultListModel<String>();
-        advancedParamsList = new JBList(defaultListModel);
+        advancedParamsListModel = new DefaultListModel<String>();
+        advancedParamsList = new JBList(advancedParamsListModel);
     }
 
     public boolean isWasOK() {
@@ -461,7 +462,7 @@ public class EvoStartDialog extends JDialog {
     //add a custom param from the advanced tab to the list of params
     private void onAddParam() {
         //check if the parameter is valid
-        defaultListModel.addElement(paramTextField.getText());
+        advancedParamsListModel.addElement(paramTextField.getText());
         paramTextField.setText("");
     }
 
@@ -470,7 +471,7 @@ public class EvoStartDialog extends JDialog {
         if (advancedParamsList.isSelectionEmpty()) {
             warn("You have not selected a parameter to be removed.");
         } else {
-            defaultListModel.remove(advancedParamsList.getSelectedIndex());
+            advancedParamsListModel.remove(advancedParamsList.getSelectedIndex());
         }
     }
 
@@ -485,14 +486,14 @@ public class EvoStartDialog extends JDialog {
         warningLabel.setVisible(false);
     }
 
-
-
-
-
-
-
-
-
+    /**
+     *  add the params from EvoParameters to the DefaultListModel
+     */
+    private void addSavedAdvancedParams() {
+        for (int i = 0; i < params.getAdvancedParams().size(); i++) {
+            advancedParamsListModel.addElement(params.getAdvancedParam(i));
+        }
+    }
 
 
     /**
