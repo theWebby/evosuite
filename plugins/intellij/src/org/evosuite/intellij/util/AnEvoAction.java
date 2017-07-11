@@ -16,23 +16,10 @@ import java.io.IOException;
  */
 public class AnEvoAction extends AnAction {
     public AnEvoAction(String name, String description){
-        super(name, description, loadIcon());
+        super(name, description, Icons.getEvoSuiteIcon());
     }
 
     public void actionPerformed(AnActionEvent event){
 
-    }
-
-    private static Icon loadIcon(){
-        try {
-            Image image = ImageIO.read( EvoSettingsAction.class.getClassLoader().getResourceAsStream( "evosuite.png" ));
-            image = image.getScaledInstance(16, 16, java.awt.Image.SCALE_SMOOTH);
-            ImageIcon icon =  new ImageIcon(image);
-
-            return icon;
-        } catch (IOException e) {
-            e.printStackTrace(); //should not really happen
-        }
-        return null;
     }
 }

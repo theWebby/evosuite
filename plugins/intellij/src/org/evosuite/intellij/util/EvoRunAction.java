@@ -8,10 +8,7 @@ import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import org.evosuite.intellij.EvoParameters;
-import org.evosuite.intellij.EvoSettingsAction;
-import org.evosuite.intellij.IntelliJNotifier;
-import org.evosuite.intellij.ModulesInfo;
+import org.evosuite.intellij.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -54,6 +51,10 @@ public class EvoRunAction extends AnEvoAction {
 
         toolWindow.show(() -> notifier.clearConsole());
         EvoSuiteExecutor.getInstance().run(project, EvoParameters.getInstance(),map,notifier);
+
+        //add gutter icons to tested methods
+        GutterIconController gutterIconController = new GutterIconController(new TestedMethodLocator());
+        gutterIconController.markTestedMethodsInEditor(event.getData(PlatformDataKeys.EDITOR), project);
     }
 
 
