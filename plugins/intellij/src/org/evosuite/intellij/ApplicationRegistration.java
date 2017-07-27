@@ -21,6 +21,7 @@ package org.evosuite.intellij;
 
 import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ApplicationComponent;
+import org.evosuite.intellij.util.EvoLinkTestAction;
 import org.evosuite.intellij.util.EvoRunAction;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,12 +43,16 @@ public class ApplicationRegistration implements ApplicationComponent {
 
         EvoSettingsAction evoSettingsAction = new EvoSettingsAction();
         EvoRunAction evoRunAction = new EvoRunAction();
+        EvoLinkTestAction evoLinkTestAction = new EvoLinkTestAction();
+
         am.registerAction("EvoSuite Settings", evoSettingsAction);
         am.registerAction("Run EvoSuite", evoRunAction);
+        am.registerAction("Link Tests", evoLinkTestAction);
 
         DefaultActionGroup evoGroup = new DefaultActionGroup("EvoSuite", true);
         evoGroup.add(evoSettingsAction);
         evoGroup.add(evoRunAction);
+        evoGroup.add(evoLinkTestAction);
 
 
         //add EvoSuite group to editor and project popup menus
@@ -57,6 +62,8 @@ public class ApplicationRegistration implements ApplicationComponent {
         epM.addSeparator();
         pvM.add(evoGroup);
         epM.add(evoGroup);
+
+
     }
 
     @Override

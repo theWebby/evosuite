@@ -53,8 +53,8 @@ public class EvoRunAction extends AnEvoAction {
         EvoSuiteExecutor.getInstance().run(project, EvoParameters.getInstance(),map,notifier);
 
         //add gutter icons to tested methods
-        GutterIconController gutterIconController = new GutterIconController(new TestedMethodLocator());
-        gutterIconController.markTestedMethodsInEditor(event.getData(PlatformDataKeys.EDITOR), project);
+        //GutterIconController gutterIconController = new GutterIconController();
+        //gutterIconController.markTestedMethodsInEditor(event.getData(PlatformDataKeys.EDITOR), project);
     }
 
 

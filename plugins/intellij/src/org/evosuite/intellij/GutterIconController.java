@@ -8,12 +8,17 @@ import com.intellij.openapi.editor.markup.HighlighterLayer;
 import com.intellij.openapi.editor.markup.MarkupModel;
 import com.intellij.openapi.editor.markup.RangeHighlighter;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import org.evosuite.intellij.util.CustomPsiFile;
 import org.evosuite.intellij.util.Icons;
+import org.evosuite.intellij.util.PsiController;
+import org.evosuite.intellij.util.TestDef;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,12 +27,12 @@ import java.util.Set;
  * Created by webby on 10/07/17.
  */
 public class GutterIconController {
-    private TestedMethodLocator testedMethodLocator;
 
+    private Project project;
 
     //constructor
-    public GutterIconController(TestedMethodLocator testedMethodLocator){
-        this.testedMethodLocator = testedMethodLocator;
+    public GutterIconController(Project project){
+        this.project = project;
     }
 
 
@@ -39,22 +44,27 @@ public class GutterIconController {
      * @param editor
      * @param project
      */
-    public void markTestedMethodsInEditor(Editor editor, Project project){
+    public void markTestedMethodsInEditor(Editor editor, Project project) throws Exception {
         if (editor == null) return;
 
-        PsiDocumentManager psiDocumentManager = PsiDocumentManager.getInstance(project);
-        PsiFile psiFile = psiDocumentManager.getPsiFile(editor.getDocument());
+        //todo make psiFiles a list of all psiTestFiles
+        PsiController psiController = new PsiController(project);
+        CustomPsiFile[] customPsiFiles = psiController.getTestPsiFiles();
 
         //todo: check if psiFile is java
 
-        PsiJavaFile psiJavaFile = (PsiJavaFile) psiFile;
-        PsiClass[] psiClasses = psiJavaFile.getClasses();
-        for (int i = 0; i < psiClasses.length; i++){
-            PsiClass psiClass = psiClasses[i];
-            //todo: check if the class is testable and if so...
-            markTestedMethodsInClass(psiClass, editor);
-        }
+        //for each psiFile and then each class within the psiFile, mark the testedMethods
+        for (CustomPsiFile customPsiFile : customPsiFiles) {
+            PsiJavaFile psiJavaFile = (PsiJavaFile) customPsiFile.getPsiFile();
+            PsiClass[] psiClasses = psiJavaFile.getClasses();
 
+            //for each class in the psi file
+            for (int i = 0; i < psiClasses.length; i++){
+                PsiClass psiClass = psiClasses[i];
+                //todo: check if the class is testable and if so...
+                markTestedMethodsInClass(psiClass, editor, customPsiFiles[0].getFilePath());
+            }
+        }
     }
 
     /**
@@ -65,12 +75,17 @@ public class GutterIconController {
      * @param testedClass
      * @param editor
      */
-    public void markTestedMethodsInClass(PsiClass testedClass, Editor editor){
+    public void markTestedMethodsInClass(PsiClass testedClass, Editor editor, String classFilePath) throws Exception{
         try{
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
                 public void run() {
-                    doMarkTestedMethods(testedClass, editor);
+                    try{
+                        doMarkTestedMethods(testedClass, editor, classFilePath);
+                    }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }
@@ -81,39 +96,45 @@ public class GutterIconController {
     }
 
 
-    private void doMarkTestedMethods(PsiClass testedClass, Editor editor){
-        TestedMethodLocator testedMethodLocator = new TestedMethodLocator();
+    private void doMarkTestedMethods(PsiClass testedClass, Editor editor, String classFilePath) throws Exception{
+        TestedMethodLocator testedMethodLocator = new TestedMethodLocator(project);
         Document document = editor.getDocument();
-        PsiMethod[] testedMethods = testedMethodLocator.getTestedMethods(testedClass);
+        List<TestDef> testDefs = testedMethodLocator.getTestDefs(testedClass, classFilePath);
 
         //remove all prior changes and find tested methods
         unmark(editor);
 
-        for (int i = 0; i < testedMethods.length; i++){
-            markTestedMethod(testedMethods[i], document, editor);
+
+
+        //todo: pass through a marked test and a liked test through testDefs maybe?
+//        for (int i = 0; i < testedMethods.length; i++){
+//            markTestedMethod(testedMethods[i], document, editor);
+//        }
+
+
+
+
+        for (TestDef testDef : testDefs) {
+
+            List<PsiMethod> testedPsiMethods = testDef.getTestedPsiMethods();
+            //System.out.println(testedPsiMethods);
+
+            for (PsiMethod testedMethod : testDef.getTestedPsiMethods()) {
+                markTestedMethod(testedMethod, document, editor, testDef.getFilePath(), testDef.getTestLineNumber());
+            }
         }
     }
 
 
-    private void unmark(Editor editor){
-        if (editor == null){
-            return;
-        }
-
-        MarkupModel markupModel = editor.getMarkupModel();
-        markupModel.removeAllHighlighters();
-    }
-
-
-    private void markTestedMethod(PsiMethod method, Document document, Editor selectedEditor){
+    private void markTestedMethod(PsiMethod method, Document document, Editor selectedEditor, String filePath, int testLineNo){
         int line = PsiController.getMethodStartLineNumber(method, document);
         MarkupModel markupModel = selectedEditor.getMarkupModel();
         RangeHighlighter rangeHighlighter = markupModel.addLineHighlighter(line, HighlighterLayer.FIRST, null);
-        addTestedMethodGutterIcon(rangeHighlighter, method);
+        addTestedMethodGutterIcon(rangeHighlighter, method, filePath, testLineNo);
     }
 
 
-    private void addTestedMethodGutterIcon(RangeHighlighter rangeHighlighter, final PsiMethod method){
+    private void addTestedMethodGutterIcon(RangeHighlighter rangeHighlighter, final PsiMethod linkedTest, String filePath, int testLineNo){
         rangeHighlighter.setGutterIconRenderer(new GutterIconRenderer() {
             @NotNull
             @Override
@@ -122,7 +143,7 @@ public class GutterIconController {
             }
 
             public String getToolTipText(){
-                return "Go to tests for " + method.getName();
+                return "Go to tests for this method";
             }
 
             public boolean isNavigateAction(){
@@ -130,7 +151,7 @@ public class GutterIconController {
             }
 
             public AnAction getClickAction(){
-                return new GoToTestsAction(method);
+                return new GoToTestsAction(filePath, project, testLineNo);
             }
 
             @Override
@@ -143,5 +164,14 @@ public class GutterIconController {
                 return 0;
             }
         });
+    }
+
+    private void unmark(Editor editor){
+        if (editor == null){
+            return;
+        }
+
+        MarkupModel markupModel = editor.getMarkupModel();
+        markupModel.removeAllHighlighters();
     }
 }
