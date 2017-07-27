@@ -15,11 +15,9 @@ import java.util.ArrayList;
  * Created by webby on 16/07/17.
  */
 public class EvoLinkTestAction extends AnEvoAction {
-    private ArrayList<PsiMethodPair> methodPairs;
 
     public EvoLinkTestAction(){
         super("Add gutter icons to methods that link to their evosuite tests.", "Test");
-        methodPairs = new ArrayList<PsiMethodPair>();
     }
 
     public void actionPerformed(AnActionEvent actionEvent){
