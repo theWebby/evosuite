@@ -84,7 +84,6 @@ public class EvoStartDialog extends JDialog {
         this.configurationsAdded = false;
         //configurationsListModel = params.getConfigs();
 
-        this.configurationBox.setEditable(true);
 
         setFields();
 
@@ -96,6 +95,14 @@ public class EvoStartDialog extends JDialog {
         addSavedConfiguraions();
         configurationBox.setSelectedIndex(params.getConfigs().indexOf(params.getCurrentConfigName()));
         this.configurationsAdded = true;
+
+        this.configurationBox.setEditable(false);
+        try {
+            this.configurationBox.setSelectedIndex(0);
+        } catch (Exception e) {
+            this.configurationBox.setSelectedIndex(-1);
+        }
+
     }
 
 
@@ -184,7 +191,7 @@ public class EvoStartDialog extends JDialog {
             }
         });
 
-        setPreferredSize(new Dimension(EvoParameters.getInstance().getGuiWidth(), EvoParameters.getInstance().getGuiHeight()));
+        //setPreferredSize(new Dimension(EvoParameters.getInstance().getGuiWidth(), EvoParameters.getInstance().getGuiHeight()));
     }
 
     private void setFields() {
@@ -725,8 +732,8 @@ public class EvoStartDialog extends JDialog {
         createUIComponents();
         contentPane = new JPanel();
         contentPane.setLayout(new FormLayout("fill:391px:grow", "center:max(d;4px):noGrow,top:4dlu:noGrow,center:d:grow,top:4dlu:noGrow,center:max(d;4px):noGrow,top:4dlu:noGrow,center:d:grow,top:4dlu:noGrow,center:max(d;4px):noGrow"));
-        contentPane.setMinimumSize(new Dimension(540, 300));
-        contentPane.setPreferredSize(new Dimension(570, 300));
+        contentPane.setMinimumSize(new Dimension(800, 400));
+        contentPane.setPreferredSize(new Dimension(800, 400));
         contentPane.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLoweredBevelBorder(), "EvoSuite Options", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, new Font(contentPane.getFont().getName(), contentPane.getFont().getStyle(), 20)));
         tabbedPane1 = new JTabbedPane();
         CellConstraints cc = new CellConstraints();
@@ -835,6 +842,8 @@ public class EvoStartDialog extends JDialog {
         panel3.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         panel2.add(panel3, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         configurationBox = new JComboBox();
+        configurationBox.setEditable(false);
+        configurationBox.setEnabled(true);
         panel3.add(configurationBox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         addConfigurationButton = new JButton();
         addConfigurationButton.setText("Add");
