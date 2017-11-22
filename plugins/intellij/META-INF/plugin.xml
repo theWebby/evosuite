@@ -70,6 +70,9 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <!-- Add your extensions here -->
+    <projectConfigurable groupId="configurable.group">
+
+    </projectConfigurable>
   </extensions>
 
   <application-components>

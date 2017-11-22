@@ -113,6 +113,8 @@ public class ProcessRunner {
         list.add("-Dctg_time_per_class=" + params.getTime());
         list.add("-Dctg_export_folder=" + params.getFolder());
 
+        //list = addAdvancedParams(list, params);//webby
+
         if(classes != null && classes.size() >= 0) {
             if (classes.size() <= 10) {
                 String cuts = getCommaList(classes);
@@ -145,6 +147,11 @@ public class ProcessRunner {
         String path = writeLineToFile("EvoSuite_ctg_classpath_file", cp);
         list.add("-DCP_file_path="+path);
         //list.add("-DCP=" + cp);//this did not work properly on Windows
+
+        // add advanced params to the command
+        for (int i = 0; i < params.getAdvancedParams().size(); i++){
+            list.add(params.getAdvancedParam(i));
+        }
 
         return list;
     }
@@ -195,6 +202,12 @@ public class ProcessRunner {
 
         list.add("evosuite:export"); //note, here -Dctg_export_folder would do as well
         list.add("-DtargetFolder=" + params.getFolder());
+
+        // add advanced params to the command
+        for (int i = 0; i < params.getAdvancedParams().size(); i++){
+            list.add(params.getAdvancedParam(i));
+        }
+
         return list;
     }
 
@@ -204,5 +217,9 @@ public class ProcessRunner {
         }
         return null;
     }
+
+//    private static List<String> addAdvancedParams(List<String> list, EvoParameters params){
+//webby
+//    }
 
 }

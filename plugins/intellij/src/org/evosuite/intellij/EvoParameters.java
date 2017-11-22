@@ -23,6 +23,7 @@ import com.intellij.ide.util.PropertiesComponent;
 import com.intellij.openapi.project.Project;
 import org.evosuite.intellij.util.Utils;
 
+import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
@@ -41,6 +42,11 @@ public class EvoParameters {
     public static final String EXECUTION_MODE = "execution_mode";
     public static final String GUI_DIALOG_WIDTH = "evosuite_gui_dialog_width";
     public static final String GUI_DIALOG_HEIGHT = "evosuite_gui_dialog_height";
+    public static final String NUMBER_OF_ADVANCED_PARAMS = "number_of_advanced_params";
+    public static final String NUMBER_OF_CONFIGURATIONS = "number_of_configurations";
+    public static final String ADVANCED_PARAM = "advanced_param_";  //number appended
+    public static final String CONFIGURATION = "configuration_";    //number appended
+    public static final String CURRENT_CONFIGURATION = "current_configuration_";
 
     public static final String EXECUTION_MODE_MVN = "JAR";
     public static final String EXECUTION_MODE_JAR = "MVN";
@@ -55,8 +61,14 @@ public class EvoParameters {
     private String javaHome;
     private String evosuiteJarLocation;
     private String executionMode;
+    private DefaultListModel<String> advancedParams;
+    private DefaultListModel<String> configs;
+    private String currentConfigName;
     private int guiWidth;
     private int guiHeight;
+
+    private final int MIN_GUI_WIDTH = 500;
+    private final int MIN_GUI_HEIGHT = 340;
 
 
     public static EvoParameters getInstance(){
@@ -71,34 +83,106 @@ public class EvoParameters {
     }
 
     public void load(Project project){
+        PropertiesComponent properties = PropertiesComponent.getInstance(project);
+        configs = new DefaultListModel<String>();
+
+        int numberOfConfigs = properties.getInt(NUMBER_OF_CONFIGURATIONS, -1);
+        if (numberOfConfigs == -1){
+            // no configurations found
+            numberOfConfigs = 1;
+            configs.addElement("Configuration 1");
+        }
+        else{
+            // load all of the configuration names
+            for (int i = 0; i < numberOfConfigs; i++){
+                configs.addElement(properties.getValue(CONFIGURATION + i));
+            }
+        }
+
+        currentConfigName = properties.getValue(CURRENT_CONFIGURATION, "");
+
+        if (currentConfigName.equals("")){
+            //load the first configuration
+            loadConfiguration(project, configs.get(0));
+        }
+        else{
+            loadConfiguration(project, currentConfigName);
+        }
+
+
+    }
+
+    public void loadConfiguration(Project project, String configName){
+        this.currentConfigName = configName;
+
         PropertiesComponent p = PropertiesComponent.getInstance(project);
-        cores = p.getInt(CORES_EVOSUITE_PARAM,1);
-        memory = p.getInt(MEMORY_EVOSUITE_PARAM,2000);
-        time = p.getInt(TIME_EVOSUITE_PARAM,3);
-        folder = p.getValue(TARGET_FOLDER_EVOSUITE_PARAM, "src/evo");
+        cores = p.getInt(configName + CORES_EVOSUITE_PARAM,1);
+        memory = p.getInt(configName + MEMORY_EVOSUITE_PARAM,2000);
+        time = p.getInt(configName + TIME_EVOSUITE_PARAM,3);
+        folder = p.getValue(configName + TARGET_FOLDER_EVOSUITE_PARAM, "src/evo");
 
         String envJavaHome = System.getenv("JAVA_HOME");
-        javaHome = p.getValue(JAVA_HOME, envJavaHome!=null ? envJavaHome : "");
-        mvnLocation = p.getValue(MVN_LOCATION,"");
-        evosuiteJarLocation = p.getValue(EVOSUITE_JAR_LOCATION,"");
-        executionMode = p.getValue(EXECUTION_MODE,EXECUTION_MODE_MVN);
+        javaHome = p.getValue(configName + JAVA_HOME, envJavaHome!=null ? envJavaHome : "");
+        mvnLocation = p.getValue(configName + MVN_LOCATION,"");
+        evosuiteJarLocation = p.getValue(configName + EVOSUITE_JAR_LOCATION,"");
+        executionMode = p.getValue(configName + EXECUTION_MODE,EXECUTION_MODE_MVN);
 
-        guiWidth = p.getInt(GUI_DIALOG_WIDTH, 570);
-        guiHeight = p.getInt(GUI_DIALOG_HEIGHT, 300);
+            advancedParams = new DefaultListModel<String>();
+
+        //loading advanced parameters
+        for (int i = 0; i < p.getInt(configName + "_" + NUMBER_OF_ADVANCED_PARAMS, 0); i++){
+            advancedParams.addElement(p.getValue(configName + "_" + ADVANCED_PARAM + i));
+        }
+
+        guiWidth = p.getInt(configName + GUI_DIALOG_WIDTH, MIN_GUI_WIDTH);       //default is minimum
+        guiHeight = p.getInt(configName + GUI_DIALOG_HEIGHT, MIN_GUI_HEIGHT);    //default is minimum
+
+        setGUIMinimums();
     }
 
     public void save(Project project){
         PropertiesComponent p = PropertiesComponent.getInstance(project);
-        p.setValue(CORES_EVOSUITE_PARAM,""+cores);
-        p.setValue(TIME_EVOSUITE_PARAM,""+time);
-        p.setValue(MEMORY_EVOSUITE_PARAM,""+memory);
-        p.setValue(TARGET_FOLDER_EVOSUITE_PARAM,folder);
-        p.setValue(JAVA_HOME,javaHome);
-        p.setValue(MVN_LOCATION,getPossibleLocationForMvn());
-        p.setValue(EVOSUITE_JAR_LOCATION,evosuiteJarLocation);
-        p.setValue(EXECUTION_MODE,executionMode);
-        p.setValue(GUI_DIALOG_WIDTH,""+guiWidth);
-        p.setValue(GUI_DIALOG_HEIGHT,""+guiHeight);
+        saveConfigurationNames(project, 0);
+
+        p.setValue(currentConfigName + CORES_EVOSUITE_PARAM,""+cores);
+        p.setValue(currentConfigName + TIME_EVOSUITE_PARAM,""+time);
+        p.setValue(currentConfigName + MEMORY_EVOSUITE_PARAM,""+memory);
+        p.setValue(currentConfigName + TARGET_FOLDER_EVOSUITE_PARAM,folder);
+        p.setValue(currentConfigName + JAVA_HOME,javaHome);
+        p.setValue(currentConfigName + MVN_LOCATION,getPossibleLocationForMvn());
+        p.setValue(currentConfigName + EVOSUITE_JAR_LOCATION,evosuiteJarLocation);
+        p.setValue(currentConfigName + EXECUTION_MODE,executionMode);
+        p.setValue(currentConfigName + GUI_DIALOG_WIDTH,""+guiWidth);
+        p.setValue(currentConfigName + GUI_DIALOG_HEIGHT,""+guiHeight);
+
+        //saving advanced parameters
+        p.setValue(currentConfigName + "_" + NUMBER_OF_ADVANCED_PARAMS, ""+advancedParams.size());
+        for (int i = 0; i < advancedParams.size(); i++){
+            p.setValue(currentConfigName + "_" + ADVANCED_PARAM + i, advancedParams.get(i));
+        }
+    }
+
+    /**
+     * Will save all of the configuration names that exist.
+     * If removeLastXElements is 0, all configuration names will be saved.
+     * If removeLastXElements is 1, all but the last configuration name will be saved.
+     *
+     * Note, this method will also set the current configuration name
+     *
+     * @param project
+     * @param removeLastXElements
+     */
+    public void saveConfigurationNames(Project project, int removeLastXElements){
+        PropertiesComponent p = PropertiesComponent.getInstance(project);
+
+        int numberOfConfigs = configs.size() - removeLastXElements;
+
+        p.setValue(NUMBER_OF_CONFIGURATIONS, ""+numberOfConfigs);
+        for (int i = 0; i < numberOfConfigs; i++){
+            p.setValue(CONFIGURATION+i, configs.get(i));
+        }
+
+        p.setValue(CURRENT_CONFIGURATION, currentConfigName);
     }
 
     private String getPossibleLocationForMvn(){
@@ -139,6 +223,16 @@ public class EvoParameters {
                 }
             }
             return "";
+        }
+    }
+
+    private void setGUIMinimums(){
+        if (guiWidth < MIN_GUI_WIDTH) {
+            guiWidth = MIN_GUI_WIDTH;
+        }
+
+        if (guiHeight < MIN_GUI_HEIGHT) {
+            guiHeight = MIN_GUI_HEIGHT;
         }
     }
 
@@ -222,4 +316,109 @@ public class EvoParameters {
     public void setGuiHeight(int guiHeight) {
         this.guiHeight = guiHeight;
     }
+
+    public void addAdvancedParameter(String param){
+        advancedParams.addElement(param);
+    }
+
+    public DefaultListModel<String> getAdvancedParams(){
+        if (advancedParams == null){
+            return new DefaultListModel<String>();
+        }
+        else{
+            return advancedParams;
+        }
+    }
+
+    public String getAdvancedParam(int index){
+        return this.advancedParams.get(index);
+    }
+
+    public void setAdvancedParams(DefaultListModel<String> advancedParams){
+        this.advancedParams = advancedParams;
+    }
+
+    public DefaultListModel<String> getConfigs(){
+        return this.configs;
+    }
+
+    public String getConfig(int index){
+        return this.configs.get(index);
+    }
+
+    public void addConfiguration(String configName){
+        configs.addElement(configName);
+    }
+
+    public String getCurrentConfigName() {
+        return currentConfigName;
+    }
+
+    public void removeConfig(Project project, String configName){
+        int configToRemoveIndex = configs.indexOf(configName);
+
+        // config to be removed is replaced with the last element
+        configs.set(configToRemoveIndex, (configs.lastElement()));
+
+        //load the first configuration
+        loadConfiguration(project, configs.get(0));
+        saveConfigurationNames(project, 1);
+        load(project);
+    }
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -19,9 +19,9 @@
  */
 package org.evosuite.intellij;
 
-import com.intellij.openapi.actionSystem.ActionManager;
-import com.intellij.openapi.actionSystem.DefaultActionGroup;
+import com.intellij.openapi.actionSystem.*;
 import com.intellij.openapi.components.ApplicationComponent;
+import org.evosuite.intellij.util.EvoRunAction;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,23 +32,34 @@ import org.jetbrains.annotations.NotNull;
 public class ApplicationRegistration implements ApplicationComponent {
     @Override
     public void initComponent() {
-        EvoAction evo = new EvoAction();
-
-
         // Gets an instance of the WindowMenu action group.
         //DefaultActionGroup windowM = (DefaultActionGroup) am.getAction("WindowMenu");
         //this in the file editor, not the left-pane file selection
         //DefaultActionGroup editorM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
 
+        //registering actions with actionmanager and adding them to EvoSuite group
         ActionManager am = ActionManager.getInstance();
 
-        DefaultActionGroup pvM = (DefaultActionGroup) am.getAction("ProjectViewPopupMenu");
-        pvM.addSeparator();
-        pvM.add(evo);
+        EvoSettingsAction evoSettingsAction = new EvoSettingsAction();
+        EvoRunAction evoRunAction = new EvoRunAction();
 
+        am.registerAction("EvoSuite Settings", evoSettingsAction);
+        am.registerAction("Run EvoSuite", evoRunAction);
+
+        DefaultActionGroup evoGroup = new DefaultActionGroup("EvoSuite", true);
+        evoGroup.add(evoSettingsAction);
+        evoGroup.add(evoRunAction);
+
+
+        //add EvoSuite group to editor and project popup menus
+        DefaultActionGroup pvM = (DefaultActionGroup) am.getAction("ProjectViewPopupMenu");
         DefaultActionGroup epM = (DefaultActionGroup) am.getAction("EditorPopupMenu");
+        pvM.addSeparator();
         epM.addSeparator();
-        epM.add(evo);
+        pvM.add(evoGroup);
+        epM.add(evoGroup);
+
+
     }
 
     @Override
