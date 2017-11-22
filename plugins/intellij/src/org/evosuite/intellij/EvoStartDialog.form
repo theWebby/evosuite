@@ -12,11 +12,11 @@
     <rowspec value="center:max(d;4px):noGrow"/>
     <colspec value="fill:391px:grow"/>
     <constraints>
-      <xy x="26" y="54" width="860" height="412"/>
+      <xy x="26" y="54" width="893" height="502"/>
     </constraints>
     <properties>
-      <minimumSize width="540" height="300"/>
-      <preferredSize width="570" height="300"/>
+      <minimumSize width="800" height="400"/>
+      <preferredSize width="800" height="400"/>
     </properties>
     <border type="bevel-lowered" title="EvoSuite Options">
       <font size="20"/>
@@ -373,7 +373,10 @@
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
+                <properties>
+                  <editable value="false"/>
+                  <enabled value="true"/>
+                </properties>
               </component>
             </children>
           </grid>
